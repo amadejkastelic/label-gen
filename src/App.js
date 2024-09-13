@@ -48,7 +48,7 @@ function App() {
       page.drawText(`${prefix}-${(start + i).toString().padStart(5, '0')}`, {
         x: x,
         y: height - (y + labelHeightPt),
-        size: fontSize,
+        size: parseInt(fontSize, 10),
         font: font,
       });
       x += labelWidthPt + 5.5;
