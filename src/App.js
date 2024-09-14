@@ -23,40 +23,43 @@ function App() {
     }
   }, []);
 
-  const marginLeft = 24.094 + 8;
-  const marginTop = 38.268 + 5;
+  const marginLeft = 24.094;
+  const marginTop = 38.268;
 
   const generatePDF = async () => {
-    const doc = await PDFDocument.create();
+    const doc = await PDFDocument.create(paperSize);
     const font = await doc.embedFont(StandardFonts.TimesRoman);
-    const page = doc.addPage(PageSizes[paperSize]);
+    const page = doc.addPage();
 
     const { width, height } = page.getSize();
 
     const labelWidthPt = (labelWidth / 10) * 28.346;
     const labelHeightPt = (labelHeight / 10) * 28.346;
 
-    const cols = Math.floor((width - marginLeft) / labelWidthPt);
-    const rows = Math.floor((height - marginTop) / labelHeightPt) - 1;
-    const numCells = cols * rows;
-
     const start = parseInt(startNumber, 10);
 
-    let x = marginLeft;
+    let x = marginLeft + marginLeft / 2;
     let y = marginTop;
-    for (let i = 0; i < numCells; i++) {
+    let i = 0;
+    while (true) {
       page.drawText(`${prefix}-${(start + i).toString().padStart(5, '0')}`, {
         x: x,
-        y: height - (y + labelHeightPt),
+        y: height - (y + labelHeightPt / 2),
         size: parseInt(fontSize, 10),
         font: font,
       });
-      x += labelWidthPt + 5.5;
+      x += labelWidthPt + 8;
 
-      if (x + labelWidthPt > width - marginLeft) {
-        x = marginLeft;
+      if (x + labelWidthPt > width) {
+        x = marginLeft + marginLeft / 2;
         y += labelHeightPt;
       }
+
+      if (y > (height - marginTop)) {
+        break;
+      }
+
+      i++;
     }
 
     const blob = new Blob([await doc.save()], { type: 'application/pdf' });
