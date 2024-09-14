@@ -55,7 +55,7 @@ function App() {
         y += labelHeightPt;
       }
 
-      if (y > (height - marginTop)) {
+      if (y >= (height - marginTop - 1)) {
         break;
       }
 
